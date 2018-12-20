@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-#  picture_namer_v2.py
+#  picture_namer.py
 #  
 #  Copyright 2018 sky5hr0ud <sky5hr0ud>
 #  
