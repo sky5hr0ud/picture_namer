@@ -20,7 +20,7 @@
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #  MA 02110-1301, USA.
 #  
-#  Script modified to enable better functionality.
+#  This script appends the folder name to picture filenames.
 
 import os
 import sys
