@@ -26,36 +26,37 @@ import os
 
 
 def main():
-	path = input('Folder path: ')
-	os.chdir(path)
-	file_namer(path)
-	return 0
+    path = input('Folder path: ')
+    os.chdir(path)
+    file_namer(path)
+    return 0
 
 
 def file_namer(path):
-	count = file_counter()
-	for file in sorted(os.listdir('.')):
-		if file.endswith(('.jpg','.png','.mp4','.jpeg','.JPG','.JPEG','.dng','.DNG')):
-			rel_path = os.path.relpath(".","..").replace(" ","_")
-			if file.startswith(rel_path):
-				continue
-			else:
-				print (file)
-				new_file = os.path.relpath(".", "..") + '_'
-				new_file = new_file.replace(" ", "_")
-				new_file = new_file + str(count).zfill(5) + '_'
-				os.rename(file, new_file+file)
-				count = count + 1
+    count = file_counter()
+    files = os.listdir('.')
+    files = sorted(files, key=os.path.getmtime)
+    for file in files:
+        if file.endswith(('.jpg', '.png', '.mp4', '.jpeg', '.JPG', '.JPEG', '.dng', '.DNG')):
+            rel_path = os.path.relpath('.', '..').replace(' ', '_')
+            if file.startswith(rel_path):
+                continue
+            else:
+                print(file)
+                new_file = os.path.relpath('.', '..') + '_'
+                new_file = new_file.replace(' ', '_')
+                new_file = new_file + str(count).zfill(5) + '_'
+                os.rename(file, new_file + file)
+                count = count + 1
 
 
 def file_counter():  # returns the number of files in a directory
-	count = 0
-	for file in os.listdir('.'):
-		#if file.startswith(os.path.relpath(".","..")):
-		rel_path = os.path.relpath(".","..").replace(" ","_")
-		if file.startswith(rel_path):
-			count = count + 1
-	return count
+    count = 0
+    for file in os.listdir('.'):
+        rel_path = os.path.relpath('.', '..').replace(' ', '_')
+        if file.startswith(rel_path):
+            count = count + 1
+    return count
 
 
 main()
