@@ -53,9 +53,10 @@ def file_namer(path):
 def file_counter():  # returns the number of files in a directory
     count = 0
     for file in os.listdir('.'):
-        rel_path = os.path.relpath('.', '..').replace(' ', '_')
-        if file.startswith(rel_path):
-            count = count + 1
+        if file.endswith(('.jpg', '.png', '.mp4', '.jpeg', '.JPG', '.JPEG', '.dng', '.DNG')):
+            rel_path = os.path.relpath('.', '..').replace(' ', '_')
+            if file.startswith(rel_path):
+                count = count + 1
     return count
 
 
