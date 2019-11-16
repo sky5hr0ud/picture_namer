@@ -24,6 +24,8 @@
 
 import os
 
+list_of_filetypes = ['.jpg', '.png', '.mp4', '.jpeg', '.dng', '.gif']
+
 
 def main():
     path = input('Folder path: ')
@@ -32,12 +34,26 @@ def main():
     return 0
 
 
+def list_of_filetypes_modifier():  # generate uppercase and lowercase filenames
+    new_list_of_filetypes = []
+    for filetype in list_of_filetypes:
+        uppercase = filetype.upper()
+        lowercase = filetype.lower()
+        new_list_of_filetypes.append(uppercase)
+        new_list_of_filetypes.append(lowercase)
+    return new_list_of_filetypes
+
+
 def file_namer(path):
     count = file_counter()
+    lead_zeros = 5
+    if len(str(count)) >= lead_zeros:
+        lead_zeros = len(str(count)) + 2
+    filetypes = list_of_filetypes_modifier()
     files = os.listdir('.')
     files = sorted(files, key=os.path.getmtime)
     for file in files:
-        if file.endswith(('.jpg', '.png', '.mp4', '.jpeg', '.JPG', '.JPEG', '.dng', '.DNG','.gif','.GIF')):
+        if file.endswith(tuple(filetypes)):
             rel_path = os.path.relpath('.', '..').replace(' ', '_')
             if file.startswith(rel_path):
                 continue
@@ -45,15 +61,16 @@ def file_namer(path):
                 print(file)
                 new_file = os.path.relpath('.', '..') + '_'
                 new_file = new_file.replace(' ', '_')
-                new_file = new_file + str(count).zfill(5) + '_'
+                new_file = new_file + str(count).zfill(lead_zeros) + '_'
                 os.rename(file, new_file + file)
                 count = count + 1
 
 
 def file_counter():  # returns the number of files in a directory
+    filetypes = list_of_filetypes_modifier()
     count = 0
     for file in os.listdir('.'):
-        if file.endswith(('.jpg', '.png', '.mp4', '.jpeg', '.JPG', '.JPEG', '.dng', '.DNG','.gif','.GIF')):
+        if file.endswith(tuple(filetypes)):
             rel_path = os.path.relpath('.', '..').replace(' ', '_')
             if file.startswith(rel_path):
                 count = count + 1
