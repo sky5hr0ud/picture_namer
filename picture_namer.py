@@ -37,7 +37,7 @@ def file_namer(path):
     files = os.listdir('.')
     files = sorted(files, key=os.path.getmtime)
     for file in files:
-        if file.endswith(('.jpg', '.png', '.mp4', '.jpeg', '.JPG', '.JPEG', '.dng', '.DNG')):
+        if file.endswith(('.jpg', '.png', '.mp4', '.jpeg', '.JPG', '.JPEG', '.dng', '.DNG','.gif','.GIF')):
             rel_path = os.path.relpath('.', '..').replace(' ', '_')
             if file.startswith(rel_path):
                 continue
@@ -53,7 +53,7 @@ def file_namer(path):
 def file_counter():  # returns the number of files in a directory
     count = 0
     for file in os.listdir('.'):
-        if file.endswith(('.jpg', '.png', '.mp4', '.jpeg', '.JPG', '.JPEG', '.dng', '.DNG')):
+        if file.endswith(('.jpg', '.png', '.mp4', '.jpeg', '.JPG', '.JPEG', '.dng', '.DNG','.gif','.GIF')):
             rel_path = os.path.relpath('.', '..').replace(' ', '_')
             if file.startswith(rel_path):
                 count = count + 1
