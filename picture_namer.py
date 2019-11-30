@@ -23,14 +23,27 @@
 #  This script appends the folder name to picture filenames.
 
 import os
+import argparse
 
 list_of_filetypes = ['.jpg', '.png', '.mp4', '.jpeg', '.dng', '.gif']
 
 
 def main():
-    path = input('Folder path: ')
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        '-f', '--filename', help='Sort by filename', action='store_true')
+    parser.add_argument(
+        '-m', '--moddate', help='Sort by file modified date',
+        action='store_true')
+    parser.add_argument(
+        '-p', '--folderpath', type=str, help='Add a path to the folder')
+    args = parser.parse_args()
+    if args.folderpath:
+        path = args.folderpath
+    else:
+        path = input('Folder path: ')
     os.chdir(path)
-    file_namer(path)
+    file_namer(path, args.filename, args.moddate)
     return 0
 
 
@@ -44,14 +57,19 @@ def list_of_filetypes_modifier():  # generate uppercase and lowercase filenames
     return new_list_of_filetypes
 
 
-def file_namer(path):
+def file_namer(path, argfilename, argmoddate):
     count = file_counter()
     lead_zeros = 5
     if len(str(count)) >= lead_zeros:
         lead_zeros = len(str(count)) + 2
     filetypes = list_of_filetypes_modifier()
     files = os.listdir('.')
-    files = sorted(files, key=os.path.getmtime)
+    if argfilename is True:
+        files = sorted(files)
+    elif argmoddate is True:
+        files = sorted(files, key=os.path.getmtime)
+    else:
+        files = sorted(files)
     for file in files:
         if file.endswith(tuple(filetypes)):
             rel_path = os.path.relpath('.', '..').replace(' ', '_')
