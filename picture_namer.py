@@ -76,10 +76,10 @@ def file_namer(path, argfilename, argmoddate):
             if file.startswith(rel_path):
                 continue
             else:
-                print(file)
                 new_file = os.path.relpath('.', '..') + '_'
                 new_file = new_file.replace(' ', '_')
                 new_file = new_file + str(count).zfill(lead_zeros) + '_'
+                print(file + ' -> ' + new_file + file)
                 os.rename(file, new_file + file)
                 count = count + 1
 
