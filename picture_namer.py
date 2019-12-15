@@ -25,7 +25,7 @@
 import os
 import argparse
 
-list_of_filetypes = ['.jpg', '.png', '.mp4', '.jpeg', '.dng', '.gif']
+list_of_filetypes = ['.jpg', '.png', '.mp4', '.jpeg', '.dng', '.gif', '.nef']
 
 
 def main():
