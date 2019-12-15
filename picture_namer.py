@@ -69,7 +69,7 @@ def file_namer(path, argfilename, argmoddate):
     elif argmoddate is True:
         files = sorted(files, key=os.path.getmtime)
     else:
-        files = sorted(files)
+        files = sorted(files, key=os.path.getmtime)
     for file in files:
         if file.endswith(tuple(filetypes)):
             rel_path = os.path.relpath('.', '..').replace(' ', '_')
