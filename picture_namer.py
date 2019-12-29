@@ -96,4 +96,5 @@ def file_counter():  # returns the number of files in a directory
     return count
 
 
-main()
+if __name__ == '__main__':
+    main()
