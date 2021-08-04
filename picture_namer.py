@@ -3,7 +3,7 @@
 #
 #  picture_namer.py
 #
-#  Copyright 2018 sky5hr0ud <sky5hr0ud>
+#  Copyright 2021 sky5hr0ud <sky5hr0ud>
 #
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -21,12 +21,10 @@
 #  MA 02110-1301, USA.
 #
 #  This script appends the folder name to picture filenames.
+#  Picture filenames are read in from list_of_filetypes.txt.
 
 import os
 import argparse
-
-list_of_filetypes = (
-    ['.jpg', '.png', '.mp4', '.jpeg', '.dng', '.gif', '.nef', '.bmp'])
 
 
 def main():
@@ -43,19 +41,44 @@ def main():
         path = args.folderpath
     else:
         path = input('Folder path: ')
-    os.chdir(path)
     file_namer(path, args.filename, args.moddate)
     return 0
 
 
-def list_of_filetypes_modifier():  # generate uppercase and lowercase filenames
+def list_of_filetypes_modifier():  # generate clean list of filenames
+    list_of_filetypes = get_filetypes()
+    clean_list = clean_list_of_filetypes(list_of_filetypes)
     new_list_of_filetypes = []
-    for filetype in list_of_filetypes:
+    for filetype in clean_list:
         uppercase = filetype.upper()
         lowercase = filetype.lower()
         new_list_of_filetypes.append(uppercase)
         new_list_of_filetypes.append(lowercase)
     return new_list_of_filetypes
+
+
+def get_filetypes():
+    filetypes_file = open('list_of_filetypes.txt', 'r')
+    list_of_filetypes = filetypes_file.readlines()
+    return list_of_filetypes
+
+
+def clean_list_of_filetypes(list_of_filetypes):
+    clean_list_of_filetypes = []
+    for filetype in list_of_filetypes:
+        filetype = filetype.replace(' ', '')
+        comment_c = filetype.find('//')
+        comment_py = filetype.find('#')
+        if (comment_c >= 0 or comment_py >= 0):
+            if (comment_c == 0 or comment_py == 0):
+                continue
+            elif (comment_c < comment_py or comment_py == (-1)):
+                clean_list_of_filetypes.append(filetype[:comment_c])
+            else:
+                clean_list_of_filetypes.append(filetype[:comment_py])
+        else:
+            clean_list_of_filetypes.append(filetype.replace('\n', ''))
+    return clean_list_of_filetypes
 
 
 def file_namer(path, argfilename, argmoddate):
@@ -64,6 +87,7 @@ def file_namer(path, argfilename, argmoddate):
     if len(str(count)) >= lead_zeros:
         lead_zeros = len(str(count)) + 2
     filetypes = list_of_filetypes_modifier()
+    os.chdir(path)
     files = os.listdir('.')
     if argfilename is True:
         files = sorted(files)
