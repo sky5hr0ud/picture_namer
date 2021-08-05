@@ -42,6 +42,7 @@ def main():
     else:
         path = input('Folder path: ')
     file_namer(path, args.filename, args.moddate)
+    input('Press Enter to exit.')
     return 0
 
 
@@ -58,9 +59,29 @@ def list_of_filetypes_modifier():  # generate clean list of filenames
 
 
 def get_filetypes():
-    filetypes_file = open('list_of_filetypes.txt', 'r')
-    list_of_filetypes = filetypes_file.readlines()
-    return list_of_filetypes
+    default_filetype_list = (
+        ['.jpg', '.png', '.mp4', '.jpeg', '.dng', '.gif', '.nef', '.bmp'])
+    try:
+        if (os.path.isfile('_list_of_filetypes.txt')):
+            filetypes_file = open('_list_of_filetypes.txt', 'r')
+            list_of_filetypes = filetypes_file.readlines()
+            filetypes_file.close()
+            return list_of_filetypes
+        else:
+            print('Error: _list_of_filetypes.txt not found.')
+            path = input('Input path with txt file containing filetypes: ')
+        if (os.path.isfile(path)):
+            filetypes_file = open(path, 'r')
+            list_of_filetypes = filetypes_file.readlines()
+            filetypes_file.close()
+            return list_of_filetypes
+        else:
+            print('Cannot find file. Using default list instead.')
+            return default_filetype_list
+    except Exception as e:
+        print(e)
+        print('Using default list instead.')
+        return default_filetype_list
 
 
 def clean_list_of_filetypes(list_of_filetypes):
@@ -107,6 +128,7 @@ def file_namer(path, argfilename, argmoddate):
                 print(file + ' -> ' + new_file + file)
                 os.rename(file, new_file + file)
                 count = count + 1
+    print('Renamed', count, 'files.')
 
 
 def file_counter():  # returns the number of files in a directory
