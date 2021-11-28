@@ -4,8 +4,8 @@
 block_cipher = None
 
 
-a = Analysis(['C:\\Users\\distu\\Documents\\Scripts\\Git\\picture_namer\\picture_namer.py'],
-             pathex=['C:\\Users\\distu\\Downloads'],
+a = Analysis(['picture_namer.py'],
+             pathex=['C:\\Users\\distu\\Documents\\Scripts\\Git\\picture_namer'],
              binaries=[],
              datas=[],
              hiddenimports=[],

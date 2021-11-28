@@ -39,12 +39,12 @@ def main():
             '-p', '--folderpath', type=str, help='Add a path to the folder')
         args = parser.parse_args()
         if args.folderpath:
-            path = args.folderpath
-            if path.endswith('"'):  # remove " from end if present
-                path = path[:-1]
+            folder_path = args.folderpath
+            if folder_path.endswith('"'):  # remove " from end if present
+                folder_path = folder_path[:-1]
         else:
-            path = input('Folder path to images: ')
-        file_namer(path, args.filename, args.moddate)
+            folder_path = input('Folder path to images: ')
+        file_namer(folder_path, args.filename, args.moddate)
     except Exception as e:
         print(e)
     try:
@@ -66,23 +66,32 @@ def list_of_filetypes_modifier():  # generate clean list of filenames
     return new_list_of_filetypes
 
 
+def read_file(file_path):
+    file = open(file_path, 'r')
+    read_file = file.readlines()
+    file.close()
+    return read_file
+
+
 def get_filetypes():
+    default_filetype_filename = '_list_of_filetypes.txt'
     default_filetype_list = (
         ['.jpg', '.png', '.mp4', '.jpeg', '.dng', '.gif', '.nef', '.bmp'])
     try:
-        if (os.path.isfile('_list_of_filetypes.txt')):
-            filetypes_file = open('_list_of_filetypes.txt', 'r')
-            list_of_filetypes = filetypes_file.readlines()
-            filetypes_file.close()
-            return list_of_filetypes
+        if os.path.isfile(default_filetype_filename):
+            return read_file(default_filetype_filename)
         else:
-            print('Error: _list_of_filetypes.txt not found.')
-            path = input('Input path with txt file containing filetypes: ')
-        if os.path.isfile(path):
-            filetypes_file = open(path, 'r')
-            list_of_filetypes = filetypes_file.readlines()
-            filetypes_file.close()
-            return list_of_filetypes
+            print('Error: ' + default_filetype_filename + ' not found.')
+            file_path = input('Input path to txt file containing filetypes: ')
+        if os.path.isfile(file_path):
+            print('Using filetypes list: ' + file_path.rsplit('\\', 1)[-1])
+            return read_file(file_path)
+        elif os.path.isfile(file_path + default_filetype_filename):
+            print('Using ' + default_filetype_filename + ' at ' + file_path)
+            return read_file(file_path + default_filetype_filename)
+        elif os.path.isfile(file_path + '\\' + default_filetype_filename):
+            print('Using ' + default_filetype_filename + ' at ' + file_path)
+            return read_file(file_path + '\\' + default_filetype_filename)
         else:
             print('Cannot find file. Using default list instead.')
             return default_filetype_list
@@ -116,11 +125,11 @@ def zero_padder(lead_zeros, count):
     return lead_zeros
 
 
-def file_namer(path, argfilename, argmoddate):
+def file_namer(folder_path, argfilename, argmoddate):
     files_renamed = 0
     filetypes = list_of_filetypes_modifier()
     try:
-        os.chdir(path)
+        os.chdir(folder_path)
     except Exception as e:
         print('Error with inputted path.', e, 'occurred.')
         return
