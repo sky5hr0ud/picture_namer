@@ -3,7 +3,7 @@
 #
 #  picture_namer.py
 #
-#  Copyright 2021 sky5hr0ud <sky5hr0ud>
+#  Copyright 2022 sky5hr0ud <sky5hr0ud>
 #
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #  MA 02110-1301, USA.
 #
-#  This script appends the folder name to picture filenames.
+#  This script prepends the directory name to picture filenames.
 #  Picture filenames are read in from list_of_filetypes.txt.
 
 import os
