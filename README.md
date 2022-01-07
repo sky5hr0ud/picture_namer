@@ -1,5 +1,5 @@
 # picture_namer
-This script prepends the directory name to each specified filetype along with a 5 digit number starting at "00000" eg: <directory_name>_<xxxxx>_<filename>. Spaces are changed into "_". Specified filetypes can be read from a text file or specified via the command line.
+This script prepends the directory name to each specified filetype along with a 5 digit number starting at "00000" eg: `<directory_name>_<xxxxx>_<filename>`. If there are already files with the `<directory_name>_<xxxxx>_<filename>` naming format in the directory then the script will count these files to prevent simultaneous use of the same numbers in the new filename. Spaces are changed into "_". Specified filetypes can be read from a text file or specified via the command line.
 
 ## picture_namer.py
 This is the main script. I use Python 3.8.2 to run it. The script will ask for the path to where the files to be renamed are if no path is specified in the command line. If _list_of_filetypes.txt can't be found by the script the script will ask for a text file containing a list of filetypes. Default sort behavior is by date modified.
