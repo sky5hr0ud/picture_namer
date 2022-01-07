@@ -7,7 +7,7 @@ This is the main script. I use Python 3.8.2 to run it. The script will ask for t
 The following arguments can be used if desired:
 - `-m` or `--moddate`: This sorts the files by modified date then prepends the directory name
 - `-f` or `--filename`: This sorts the files by filename then prepends the directory name
-- `-p <directory>` or `--folderpath <directory>`: Path to where files to be renamed are.
+- `-p <directory_path>` or `--folderpath <directory_path>`: Path to where files to be renamed are.
 
 ## _list_of_filetypes.txt
 The script looks for this file in the same directory as the script then reads in the filetypes. I've populated it with picture and video filetypes and more can be appended. If this file is not present the script will ask for the location of a file. If the script cannot read the file in the location inputted it will run a default list of picture filetypes. Comments can be included in the file using "#" or "//".
