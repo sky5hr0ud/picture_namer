@@ -25,6 +25,7 @@
 
 import os
 import argparse
+import sys
 
 
 def main():
@@ -80,6 +81,10 @@ def get_filetypes():
     try:
         if os.path.isfile(default_filetype_filename):
             return read_file(default_filetype_filename)
+        # This code is for when a pyinstaller .exe file is used.
+        # Pyinstaller will create a temp folder and stores the path in _MEIPASS
+        elif os.path.isfile(sys._MEIPASS + '\\' + default_filetype_filename):
+            return read_file(sys._MEIPASS + '\\' + default_filetype_filename)
         else:
             print('Error: ' + default_filetype_filename + ' not found.')
             file_path = input('Input path to txt file containing filetypes: ')
@@ -93,11 +98,11 @@ def get_filetypes():
             print('Using ' + default_filetype_filename + ' at ' + file_path)
             return read_file(file_path + '\\' + default_filetype_filename)
         else:
-            print('Cannot find file. Using default list instead.')
+            print('Warning: Cannot find file. Using default list instead.')
             return default_filetype_list
     except Exception as e:
         print(e)
-        print('Using default list instead.')
+        print('Warning: Using default list instead.')
         return default_filetype_list
 
 
