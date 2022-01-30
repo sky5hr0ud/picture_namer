@@ -18,5 +18,8 @@ The script looks for this file in the same directory as the script then reads in
 An executable is provided so the script doesn't have to be run via the command line using Python 3. This was built using Pyinstaller using the `--onefile` flag.
 The `_list_of_filetypes.txt` is packaged inside the binary. Therefore to add additional filetypes the binary will have to be rebuilt after the `_list_of_filetypes.txt` is modified.
 
+Check out this answer by James on stackoverflow for interesting Pyinstaller path behavior:  
+https://stackoverflow.com/questions/51060894/adding-a-data-file-in-pyinstaller-using-the-onefile-option
+
 ## build.bat
 This runs the command that builds picture_namer.exe. Pyinstaller and Python are required. The *.spec files and the build directory are automatically removed to clean up files.
