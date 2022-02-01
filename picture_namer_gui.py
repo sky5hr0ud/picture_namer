@@ -1,4 +1,4 @@
-from gooey import Gooey, GooeyParser
+from gooey import Gooey, GooeyParser, local_resource_path
 import picture_namer
 
 
@@ -10,6 +10,7 @@ github_url = 'https://github.com/sky5hr0ud/picture_namer'
     program_name='picture_namer',
     program_description='Prepends the directory name to pictures.',
     default_size=(1280, 720),
+    image_dir=local_resource_path('./images'),
     show_restart_button=False,
     menu=[{'name': 'File', 'items': [{
         'type': 'Link',
