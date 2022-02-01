@@ -38,32 +38,50 @@ def main():
             action='store_true')
         parser.add_argument(
             '-p', '--folderpath', type=str, help='Add a path to the folder')
+        parser.add_argument(
+            '-i', '--input', help='Disable user input',
+            action='store_false')
+        parser.add_argument(
+            '-l', '--list', type=str, help='Use a custom list of filetypes')
+        parser.add_argument(
+            '-e', '--explicit', help='Don\'t ignore letter case in filetypes',
+            action='store_false')
         args = parser.parse_args()
         if args.folderpath:
             folder_path = args.folderpath
             if folder_path.endswith('"'):  # remove " from end if present
                 folder_path = folder_path[:-1]
-        else:
+        elif args.input is True:
             folder_path = input('Folder path to images: ')
-        file_namer(folder_path, args.filename, args.moddate)
+        filetypes_options = [False, args.list, args.explicit]
+        if args.list:
+            filetypes_options[0] = True
+        file_namer(
+            folder_path, args.filename, args.moddate, args.input,
+            filetypes_options)
     except Exception as e:
         print(e)
-    try:
-        input('Press Enter to exit...')
-    except Exception as e:
-        print(e)
+    if args.input is True:
+        try:
+            input('Press Enter to exit...')
+        except Exception as e:
+            print(e)
     return 0
 
 
-def list_of_filetypes_modifier():  # generate clean list of filenames
-    list_of_filetypes = get_filetypes()
+# generate clean list of filenames
+def list_of_filetypes_modifier(arginput, filetypes_options):
+    list_of_filetypes = get_filetypes(arginput, filetypes_options)
     clean_list = clean_list_of_filetypes(list_of_filetypes)
     new_list_of_filetypes = []
-    for filetype in clean_list:
-        uppercase = filetype.upper()
-        lowercase = filetype.lower()
-        new_list_of_filetypes.append(uppercase)
-        new_list_of_filetypes.append(lowercase)
+    if filetypes_options[2] is False:
+        new_list_of_filetypes = clean_list
+    else:
+        for filetype in clean_list:
+            uppercase = filetype.upper()
+            lowercase = filetype.lower()
+            new_list_of_filetypes.append(uppercase)
+            new_list_of_filetypes.append(lowercase)
     return new_list_of_filetypes
 
 
@@ -74,18 +92,28 @@ def read_file(file_path):
     return read_file
 
 
-def get_filetypes():
+def get_filetypes(arginput, filetypes_options):
     default_filetype_filename = '_list_of_filetypes.txt'
     default_filetype_list = (
         ['.jpg', '.png', '.mp4', '.jpeg', '.dng', '.gif', '.nef', '.bmp'])
     try:
-        if os.path.isfile(default_filetype_filename):
+        if filetypes_options[0] is True:
+            if os.path.isfile(filetypes_options[1]):
+                print('Using ' + filetypes_options[1])
+                return read_file(filetypes_options[1])
+        elif os.path.isfile(default_filetype_filename):
+            print('Using ' + default_filetype_filename)
             return read_file(default_filetype_filename)
-        # This code is for when a pyinstaller .exe file is used.
+        # This code is for when a .exe created by Pyinstaller is used.
         # Pyinstaller will create a temp folder and stores the path in _MEIPASS
-        elif os.path.isfile(sys._MEIPASS + '\\' + default_filetype_filename):
-            return read_file(sys._MEIPASS + '\\' + default_filetype_filename)
-        else:
+        try:
+            if os.path.isfile(sys._MEIPASS + '\\' + default_filetype_filename):
+                return read_file(
+                    sys._MEIPASS + '\\' + default_filetype_filename)
+        except Exception as e:
+            print(e)
+            print('sys._MEIPASS only exists if .exe file is ran')
+        if arginput is True:
             print('Error: ' + default_filetype_filename + ' not found.')
             file_path = input('Input path to txt file containing filetypes: ')
         if os.path.isfile(file_path):
@@ -130,9 +158,25 @@ def zero_padder(lead_zeros, count):
     return lead_zeros
 
 
-def file_namer(folder_path, argfilename, argmoddate):
+def file_counter(filetypes):  # returns the number of files in a directory
+    count = 0
+    for file in os.listdir('.'):
+        if os.path.isfile(file):
+            if file.endswith(tuple(filetypes)):
+                rel_path = os.path.relpath('.', '..').replace(' ', '_')
+                if file.startswith(rel_path):
+                    count = count + 1
+        else:
+            continue
+    return count
+
+
+# file_namer(directory path, filename sort, date modified sort, user input,
+#   array[filetypes list exists, filetypes list, explicit case option])
+def file_namer(folder_path, argfilename, argmoddate, arginput,
+               filetypes_options):
     files_renamed = 0
-    filetypes = list_of_filetypes_modifier()
+    filetypes = list_of_filetypes_modifier(arginput, filetypes_options)
     try:
         os.chdir(folder_path)
     except Exception as e:
@@ -165,19 +209,6 @@ def file_namer(folder_path, argfilename, argmoddate):
             continue
     print('Renamed', files_renamed, 'files.')
     return
-
-
-def file_counter(filetypes):  # returns the number of files in a directory
-    count = 0
-    for file in os.listdir('.'):
-        if os.path.isfile(file):
-            if file.endswith(tuple(filetypes)):
-                rel_path = os.path.relpath('.', '..').replace(' ', '_')
-                if file.startswith(rel_path):
-                    count = count + 1
-        else:
-            continue
-    return count
 
 
 if __name__ == '__main__':
