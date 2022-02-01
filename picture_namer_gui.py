@@ -10,7 +10,6 @@ github_url = 'https://github.com/sky5hr0ud/picture_namer'
     program_name='picture_namer',
     program_description='Prepends the directory name to pictures.',
     default_size=(1280, 720),
-    image_dir='./images',
     show_restart_button=False,
     menu=[{'name': 'File', 'items': [{
         'type': 'Link',
