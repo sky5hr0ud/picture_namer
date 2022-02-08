@@ -46,6 +46,9 @@ def main():
         parser.add_argument(
             '-e', '--explicit', help='Don\'t ignore letter case in filetypes',
             action='store_false')
+        parser.add_argument(
+            '-s', '--subdirs', help='Rename files in subdirectories',
+            action='store_true')
         args = parser.parse_args()
         if args.folderpath:
             folder_path = args.folderpath
@@ -56,9 +59,9 @@ def main():
         filetypes_options = [False, args.list, args.explicit]
         if args.list:
             filetypes_options[0] = True
-        file_namer(
+        file_walker(
             folder_path, args.filename, args.moddate, args.input,
-            filetypes_options)
+            filetypes_options, args.subdirs)
     except Exception as e:
         print(e)
     if args.input is True:
@@ -67,6 +70,21 @@ def main():
         except Exception as e:
             print(e)
     return 0
+
+
+def file_walker(folder_path, argfilename, argmoddate, arginput,
+                filetypes_options, argsubdirs):
+    files_renamed = 0
+    filetypes = list_of_filetypes_modifier(arginput, filetypes_options)
+    if argsubdirs is True:
+        for root, dirs, files in os.walk(folder_path):
+            files_renamed += file_namer(
+                root, argfilename, argmoddate, filetypes)
+        print('Renamed', files_renamed, 'files.')
+    else:
+        files_renamed += file_namer(
+            folder_path, argfilename, argmoddate, filetypes)
+    return
 
 
 # generate clean list of filenames
@@ -171,12 +189,9 @@ def file_counter(filetypes):  # returns the number of files in a directory
     return count
 
 
-# file_namer(directory path, filename sort, date modified sort, user input,
-#   array[filetypes list exists, filetypes list, explicit case option])
-def file_namer(folder_path, argfilename, argmoddate, arginput,
-               filetypes_options):
+# file_namer(directory path, filename sort, date modified sort, filetypes)
+def file_namer(folder_path, argfilename, argmoddate, filetypes):
     files_renamed = 0
-    filetypes = list_of_filetypes_modifier(arginput, filetypes_options)
     try:
         os.chdir(folder_path)
     except Exception as e:
@@ -207,8 +222,8 @@ def file_namer(folder_path, argfilename, argmoddate, arginput,
                     files_renamed = files_renamed + 1
         else:
             continue
-    print('Renamed', files_renamed, 'files.')
-    return
+    print('Renamed', files_renamed, 'files in', folder_path)
+    return files_renamed
 
 
 if __name__ == '__main__':

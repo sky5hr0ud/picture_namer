@@ -7,7 +7,7 @@ github_url = 'https://github.com/sky5hr0ud/picture_namer'
 
 
 @Gooey(
-    program_name='picture_namer',
+    program_name='picture_namer_1.0.3',
     program_description='Prepends the directory name to pictures.',
     default_size=(1280, 720),
     image_dir=local_resource_path('./images'),
@@ -25,7 +25,7 @@ github_url = 'https://github.com/sky5hr0ud/picture_namer'
         'menuTitle': 'About',
         'name': 'picture_namer',
         'description': 'Prepend the directory name to your pictures',
-        'version': '1.0.2',
+        'version': '1.0.3',
         'copyright': '2022',
         'website': github_url,
         'developer': 'sky5hr0ud',
@@ -47,6 +47,9 @@ def main():
         '-e', '--Explicit', help='Ignore letter case in filetypes',
         action='store_false')  # We want this checked on the GUI
     optional_args.add_argument(
+        '--Subfolders', help='Rename files in subdfolders',
+        action='store_true')
+    optional_args.add_argument(
         '-l', '--List', type=str, help='Use a custom list of filetypes',
         widget='FileChooser')
     args = parser.parse_args()
@@ -57,8 +60,9 @@ def main():
     if args.List:
         filetypes_options[0] = True
     try:
-        picture_namer.file_namer(args.Folderpath, args.Filename, modified_sort,
-                                 user_input, filetypes_options)
+        picture_namer.file_walker(
+            args.Folderpath, args.Filename, modified_sort, user_input,
+            filetypes_options, args.Subfolders)
     except Exception as e:
         print(e)
     return 0
