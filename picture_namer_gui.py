@@ -47,7 +47,7 @@ def main():
         '-e', '--Explicit', help='Ignore letter case in filetypes',
         action='store_false')  # We want this checked on the GUI
     optional_args.add_argument(
-        '--Subfolders', help='Rename files in subdfolders',
+        '--Subfolders', help='Rename files in subfolders',
         action='store_true')
     optional_args.add_argument(
         '-l', '--List', type=str, help='Use a custom list of filetypes',
