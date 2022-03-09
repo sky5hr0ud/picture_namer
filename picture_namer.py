@@ -177,16 +177,16 @@ def zero_padder(lead_zeros, count):
 
 
 def file_counter(filetypes):  # returns the number of files in a directory
-    count = 0
+    files_modified = 0
+    files = 0
     for file in os.listdir('.'):
         if os.path.isfile(file):
             if file.endswith(tuple(filetypes)):
                 rel_path = os.path.relpath('.', '..').replace(' ', '_')
                 if file.startswith(rel_path):
-                    count = count + 1
-        else:
-            continue
-    return count
+                    files_modified = files_modified + 1
+        files = files + 1
+    return [files_modified, files]
 
 
 # file_namer(directory path, filename sort, date modified sort, filetypes)
@@ -198,7 +198,7 @@ def file_namer(folder_path, argfilename, argmoddate, filetypes):
         print('Error with inputted path.', e, 'occurred.')
         return
     count = file_counter(filetypes)
-    lead_zeros = zero_padder(5, count)  # Ensures leading zeros
+    lead_zeros = zero_padder(5, count[1])  # Ensures leading zeros
     files = os.listdir('.')
     if argfilename is True:
         files = sorted(files)
@@ -215,10 +215,10 @@ def file_namer(folder_path, argfilename, argmoddate, filetypes):
                 else:
                     new_file = os.path.relpath('.', '..') + '_'
                     new_file = new_file.replace(' ', '_')
-                    new_file = new_file + str(count).zfill(lead_zeros) + '_'
+                    new_file = new_file + str(count[0]).zfill(lead_zeros) + '_'
                     print(file + ' -> ' + new_file + file)
                     os.rename(file, new_file + file)
-                    count = count + 1
+                    count[0] = count[0] + 1
                     files_renamed = files_renamed + 1
         else:
             continue
