@@ -26,7 +26,7 @@
 import os
 import argparse
 import sys
-
+import exif_functions
 
 def main():
     try:
@@ -205,7 +205,12 @@ def file_namer(folder_path, argfilename, argmoddate, filetypes):
     elif argmoddate is True:
         files = sorted(files, key=os.path.getmtime)
     else:
-        files = sorted(files, key=os.path.getmtime)
+        try:
+            files = exif_functions.exif_file_sorter(files)
+        except Excepthon as e:
+            print(e)
+            print('Sorting by file modified time instead of exif time.')
+            files = sorted(files, key=os.path.getmtime)
     for file in files:
         if os.path.isfile(file):
             if file.endswith(tuple(filetypes)):
