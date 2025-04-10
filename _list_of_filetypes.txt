@@ -45,3 +45,8 @@
 .afphoto
 .mkv
 .mov
+.exr
+.avif
+.av1
+.webm
+.jxr
